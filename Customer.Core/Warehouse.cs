@@ -5,6 +5,7 @@
     /// </summary>
     public class Warehouse
     {
+        public static readonly Guid MainWarehouseId = Guid.NewGuid();
         public List<Engine> Engines { get; private set; }
         public List<Chassis> AllChassis { get; private set; }
         public List<OptionPack> OptionPacks { get; private set; }

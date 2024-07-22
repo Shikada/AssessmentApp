@@ -50,14 +50,28 @@ namespace WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<PreassembledVehicle>>> GetMatchingPreassembledVehicles([FromQuery] Guid vehicleOrderId)
         {
-            return await getMatchingPreassemlbedVehiclesForOrder.ExecuteAsync(vehicleOrderId);
+            try
+            {
+                return await getMatchingPreassemlbedVehiclesForOrder.ExecuteAsync(vehicleOrderId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost("order-vehicle")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> OrderPreassembledVehicle([FromQuery] Guid vehicleOrderId, [FromQuery] Guid vehicleId)
         {
-            await orderPreassembledVehicle.Execute(vehicleOrderId, vehicleId);
+            try
+            {
+                await orderPreassembledVehicle.Execute(vehicleOrderId, vehicleId);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
 
             return Ok();
         }

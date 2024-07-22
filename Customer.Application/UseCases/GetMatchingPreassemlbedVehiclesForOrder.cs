@@ -25,6 +25,18 @@ namespace Customer.Application.UseCases
             var vehicleOrder = await vehicleOrderRepository.GetVehicleOrder(vehicleOrderId);
             var warehouse = await warehouseRepository.GetWarehouse(Guid.NewGuid());
 
+            if (vehicleOrder is null)
+            {
+                logger.LogError("Could not get a vehicle order with ID {vehicleOrderId} from database that should exist", vehicleOrderId);
+                throw new Exception($"Could not get a vehicle order with ID {vehicleOrderId} from database that should exist");
+            }
+
+            if (warehouse is null)
+            {
+                logger.LogError("Could not get a warehouse with ID {warehouseId} from database that should exist", Warehouse.MainWarehouseId);
+                throw new Exception($"Could not get a warehouse with ID {Warehouse.MainWarehouseId} from database that should exist");
+            }
+
             return warehouse.FindMatchingPreassemlbedVehicles(vehicleOrder.EngineId, vehicleOrder.ChassisId, vehicleOrder.OptionPackId);
         }
     }

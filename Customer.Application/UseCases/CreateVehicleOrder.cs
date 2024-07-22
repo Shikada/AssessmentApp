@@ -1,5 +1,5 @@
-﻿using Customer.Core;
-using Customer.Messages.Commands;
+﻿using Customer.Application.Ports;
+using Customer.Core;
 using Customer.Messages.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -10,13 +10,16 @@ namespace Customer.Application.UseCases
     {
         private readonly ILogger<CreateVehicleOrder> logger;
         private readonly IPublishEndpoint publishEndpoint;
+        private readonly IWarehouseRepository warehouseRepository;
 
         public CreateVehicleOrder(
             ILogger<CreateVehicleOrder> logger,
-            IPublishEndpoint publishEndpoint)
+            IPublishEndpoint publishEndpoint,
+            IWarehouseRepository warehouseRepository)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
+            this.warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
         }
 
         public async Task ExecuteAsync(Messages.Commands.CreateVehicleOrder command)
@@ -32,6 +35,8 @@ namespace Customer.Application.UseCases
                 VehicleOrderId = newVehicleOrder.Id,
                 CustomerId = command.CustomerId
             });
+
+            var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
         }
     }
 }
