@@ -1,6 +1,34 @@
+using Serilog.Events;
+using Serilog;
+using MassTransit;
+using Customer.Application.UseCases;
+using Manufacturer.Application;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Error)
+    .MinimumLevel.Override("MassTransit", LogEventLevel.Information)
+    .MinimumLevel.Override("System.Net.Http.HttpClient", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .WriteTo.Console()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<VehicleOrderCreatedConsumer>();
+
+    x.UsingInMemory((context, cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+builder.Services.AddScoped<CreateVehicleOrder>();
+builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

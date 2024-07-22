@@ -8,12 +8,16 @@
 
   <ItemGroup>
     <Folder Include="Consumers\" />
-    <Folder Include="UseCases\" />
     <Folder Include="Ports\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Customer.Core\Customer.Core.csproj" />
+    <ProjectReference Include="..\Customer.Messages\Customer.Messages.csproj" />
   </ItemGroup>
 
 </Project>
