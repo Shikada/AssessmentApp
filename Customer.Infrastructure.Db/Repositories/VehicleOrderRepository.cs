@@ -5,9 +5,14 @@ namespace Customer.Infrastructure.Db.Repositories
 {
     public class VehicleOrderRepository : IVehicleOrderRepository
     {
-        public async Task<VehicleOrder> GetVehicleOrder(Guid id)
+        public async Task<VehicleOrder?> GetVehicleOrder(Guid id)
         {
             return new VehicleOrder();
+        }
+
+        public async Task<VehicleOrder?> Save(VehicleOrder vehicleOrder)
+        {
+            return vehicleOrder;
         }
     }
 }

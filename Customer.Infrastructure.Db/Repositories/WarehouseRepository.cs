@@ -5,9 +5,14 @@ namespace Customer.Infrastructure.Db.Repositories
 {
     public class WarehouseRepository : IWarehouseRepository
     {
-        public async Task<Warehouse> GetWarehouse(Guid id)
+        public async Task<Warehouse?> GetWarehouse(Guid id)
         {
             return new Warehouse();
+        }
+
+        public async Task<Warehouse?> Save(Warehouse warehouse)
+        {
+            return warehouse;
         }
     }
 }

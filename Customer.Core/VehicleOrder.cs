@@ -29,5 +29,10 @@
             OptionPackId = optionPackId;
             Timestamp = DateTime.UtcNow;
         }
+
+        public void AcceptOrder()
+        {
+            Status = VehicleOrderStatus.Accepted;
+        }
     }
 }

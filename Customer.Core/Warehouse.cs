@@ -27,5 +27,18 @@
                     && vehicle.OptionPack.Id == optionPack)
                 .ToList();
         }
+
+        public bool OrderPreassembledVehicle(Guid vehicleId)
+        {
+            var vehicle = PreassembledVehicles.FirstOrDefault(x => x.Id == vehicleId);
+
+            if (vehicle == null)
+                return false;
+
+            vehicle.DecrementAvailableQuantity();
+
+            return true;
+
+        }
     }
 }
