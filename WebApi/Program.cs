@@ -3,6 +3,8 @@ using Serilog;
 using MassTransit;
 using Customer.Application.UseCases;
 using Manufacturer.Application;
+using Customer.Application.Ports;
+using Customer.Infrastructure.Db.Repositories;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
@@ -29,6 +31,8 @@ builder.Services.AddMassTransit(x =>
 
 builder.Services.AddScoped<CreateVehicleOrder>();
 builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
+builder.Services.AddScoped<IVehicleOrderRepository, VehicleOrderRepository>();
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Customer.Application\Customer.Application.csproj" />
+    <ProjectReference Include="..\Customer.Infrastructure.Db\Customer.Infrastructure.Db.csproj" />
     <ProjectReference Include="..\Customer.Infrastructure\Customer.Infrastructure.csproj" />
     <ProjectReference Include="..\Customer.Messages\Customer.Messages.csproj" />
     <ProjectReference Include="..\Manufacturer.Application\Manufacturer.Application.csproj" />
