@@ -51,7 +51,7 @@ namespace Customer.Core
             return true;
         }
 
-        public bool SellReservedVehicle()
+        public bool Order()
         {
             if (ReservedQuantity <= 0)
                 return false;

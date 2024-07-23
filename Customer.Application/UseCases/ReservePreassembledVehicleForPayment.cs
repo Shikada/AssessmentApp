@@ -23,7 +23,7 @@ namespace Customer.Application.UseCases
             this.paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         }
 
-        public async Task<Invoice> Execute(Guid vehicleOrderId, Guid preassembledVehicleId)
+        public async Task<Invoice?> Execute(Guid vehicleOrderId, Guid preassembledVehicleId)
         {
             var vehicleOrder = await vehicleOrderRepository.GetVehicleOrder(vehicleOrderId);
             var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
@@ -49,7 +49,13 @@ namespace Customer.Application.UseCases
             }
 
             vehicleOrder.AwaitPayment(invoice);
-            warehouse.ReservePreassembledVehicle(preassembledVehicleId);
+            var successfullyReserved = warehouse.ReservePreassembledVehicle(preassembledVehicleId);
+
+            if (!successfullyReserved)
+            {
+                logger.LogInformation("Failed to reserve preassembled vehicle with ID {preassembledVehicleId}", preassembledVehicleId);
+                return null;
+            }
             
             await vehicleOrderRepository.Save(vehicleOrder);
             await warehouseRepository.Save(warehouse);

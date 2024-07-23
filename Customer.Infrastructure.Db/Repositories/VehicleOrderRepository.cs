@@ -10,6 +10,11 @@ namespace Customer.Infrastructure.Db.Repositories
             return new VehicleOrder();
         }
 
+        public async Task<VehicleOrder?> GetVehicleOrderByInvoiceId(Guid invoiceId)
+        {
+            return new VehicleOrder();
+        }
+
         public async Task<VehicleOrder?> Save(VehicleOrder vehicleOrder)
         {
             return vehicleOrder;

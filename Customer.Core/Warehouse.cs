@@ -42,12 +42,38 @@
 
         }
 
+        public bool AcceptOrder(VehicleOrder vehicleOrder)
+        {
+            if (vehicleOrder.PreassembledVehicleId is not null)
+            {
+                var vehicle = PreassembledVehicles.FirstOrDefault(x => x.Id == vehicleOrder.PreassembledVehicleId);
+
+                if (vehicle == null)
+                    return false;
+
+                vehicle.Order();
+            }
+            else
+            {
+                var engine = Engines.First(x => x.Id == vehicleOrder.EngineId);
+                var chassis = AllChassis.First(x => x.Id == vehicleOrder.ChassisId);
+                var optionPack = OptionPacks.First(x => x.Id == vehicleOrder.OptionPackId);
+
+                engine.Order();
+                chassis.Order();
+                optionPack.Order();
+            }
+
+            return true;
+
+        }
+
         public decimal GetPrice(VehicleOrder vehicleOrder)
         {
-            if (vehicleOrder.PreassembledVehicle != null)
-                return vehicleOrder.PreassembledVehicle.Price;
+            //TODO: add error handling here for all First() calls
+            if (vehicleOrder.PreassembledVehicleId != null)
+                return PreassembledVehicles.First(x => x.Id == vehicleOrder.PreassembledVehicleId).Price;
 
-            //TODO: add error handling here
             var engine = Engines.First(x => x.Id == vehicleOrder.EngineId);
             var chassis = AllChassis.First(x => x.Id == vehicleOrder.ChassisId);
             var optionPack = OptionPacks.First(x => x.Id == vehicleOrder.OptionPackId);

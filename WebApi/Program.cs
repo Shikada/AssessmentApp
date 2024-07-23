@@ -5,6 +5,7 @@ using Customer.Application.UseCases;
 using Manufacturer.Application;
 using Customer.Application.Ports;
 using Customer.Infrastructure.Db.Repositories;
+using Customer.Infrastructure.Services;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
@@ -32,8 +33,10 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddScoped<CreateVehicleOrder>();
 builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
 builder.Services.AddScoped<ReservePreassembledVehicleForPayment>();
+builder.Services.AddScoped<OrderVehicle>();
 builder.Services.AddScoped<IVehicleOrderRepository, VehicleOrderRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

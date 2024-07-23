@@ -10,7 +10,7 @@
         public Guid OptionPackId { get; private set; }
         public DateTime Timestamp { get; private set; }
         public Invoice? Invoice { get; private set; }
-        public PreassembledVehicle? PreassembledVehicle { get; private set; }
+        public Guid? PreassembledVehicleId { get; private set; }
 
         // warning disabled because this constructor is used only by EF
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -32,13 +32,18 @@
             Timestamp = DateTime.UtcNow;
         }
 
+        public void AssociatePreassembledVehicle(Guid preassembledVehicleId)
+        {
+            PreassembledVehicleId = preassembledVehicleId;
+        }
+
         public void AwaitPayment(Invoice invoice)
         {
             Status = VehicleOrderStatus.AwaitingPayment;
             Invoice = invoice;
         }
 
-        public void AcceptOrder()
+        public void Accept()
         {
             Status = VehicleOrderStatus.Accepted;
         }
