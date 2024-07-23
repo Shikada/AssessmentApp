@@ -13,13 +13,13 @@ namespace WebApi.Controllers
         private readonly ILogger<VehicleOrderController> logger;
         private readonly CreateVehicleOrder createVehicleOrderUseCase;
         private readonly GetMatchingPreassemlbedVehiclesForOrder getMatchingPreassemlbedVehiclesForOrder;
-        private readonly OrderPreassembledVehicle orderPreassembledVehicle;
+        private readonly ReservePreassembledVehicleForPayment orderPreassembledVehicle;
 
         public VehicleOrderController(
             ILogger<VehicleOrderController> logger,
             CreateVehicleOrder createVehicleOrderUseCase,
             GetMatchingPreassemlbedVehiclesForOrder getMatchingPreassemlbedVehiclesForOrder,
-            OrderPreassembledVehicle orderPreassembledVehicle)
+            ReservePreassembledVehicleForPayment orderPreassembledVehicle)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.createVehicleOrderUseCase = createVehicleOrderUseCase ?? throw new ArgumentNullException(nameof(createVehicleOrderUseCase));
@@ -48,6 +48,7 @@ namespace WebApi.Controllers
 
         [HttpGet("matching-preassembled")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<PreassembledVehicle>>> GetMatchingPreassembledVehicles([FromQuery] Guid vehicleOrderId)
         {
             try
@@ -62,6 +63,7 @@ namespace WebApi.Controllers
 
         [HttpPost("order-vehicle")]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> OrderPreassembledVehicle([FromQuery] Guid vehicleOrderId, [FromQuery] Guid vehicleId)
         {
             try

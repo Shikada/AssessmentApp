@@ -4,23 +4,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Customer.Application.UseCases
 {
-    public class OrderPreassembledVehicle
+    public class ReservePreassembledVehicleForPayment
     {
         private readonly ILogger<GetMatchingPreassemlbedVehiclesForOrder> logger;
         private readonly IVehicleOrderRepository vehicleOrderRepository;
         private readonly IWarehouseRepository warehouseRepository;
+        private readonly IPaymentService paymentService;
 
-        public OrderPreassembledVehicle(
+        public ReservePreassembledVehicleForPayment(
             ILogger<GetMatchingPreassemlbedVehiclesForOrder> logger,
             IVehicleOrderRepository vehicleOrderRepository,
-            IWarehouseRepository warehouseRepository)
+            IWarehouseRepository warehouseRepository,
+            IPaymentService paymentService)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.vehicleOrderRepository = vehicleOrderRepository ?? throw new ArgumentNullException(nameof(vehicleOrderRepository));
             this.warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
+            this.paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         }
 
-        public async Task Execute(Guid vehicleOrderId, Guid preassembledVehicleId)
+        public async Task<Invoice> Execute(Guid vehicleOrderId, Guid preassembledVehicleId)
         {
             var vehicleOrder = await vehicleOrderRepository.GetVehicleOrder(vehicleOrderId);
             var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
@@ -37,11 +40,21 @@ namespace Customer.Application.UseCases
                 throw new Exception($"Could not get a warehouse with ID {Warehouse.MainWarehouseId} from database that should exist");
             }
 
-            vehicleOrder.AcceptOrder();
-            warehouse.OrderPreassembledVehicle(preassembledVehicleId);
+            var invoice = await paymentService.CreateNewInvoice(vehicleOrder);
+
+            if (invoice is null)
+            {
+                logger.LogError("Payment service failed to create an invoice for vehicle order with ID {vehicleOrderId}", vehicleOrderId);
+                throw new Exception($"Payment service failed to create an invoice for vehicle order with ID {vehicleOrderId}");
+            }
+
+            vehicleOrder.AwaitPayment(invoice);
+            warehouse.ReservePreassembledVehicle(preassembledVehicleId);
             
             await vehicleOrderRepository.Save(vehicleOrder);
             await warehouseRepository.Save(warehouse);
+
+            return invoice;
         }
     }
 }

@@ -29,17 +29,30 @@
                 .ToList();
         }
 
-        public bool OrderPreassembledVehicle(Guid vehicleId)
+        public bool ReservePreassembledVehicle(Guid vehicleId)
         {
             var vehicle = PreassembledVehicles.FirstOrDefault(x => x.Id == vehicleId);
 
             if (vehicle == null)
                 return false;
 
-            vehicle.DecrementAvailableQuantity();
+            vehicle.Reserve();
 
             return true;
 
+        }
+
+        public decimal GetPrice(VehicleOrder vehicleOrder)
+        {
+            if (vehicleOrder.PreassembledVehicle != null)
+                return vehicleOrder.PreassembledVehicle.Price;
+
+            //TODO: add error handling here
+            var engine = Engines.First(x => x.Id == vehicleOrder.EngineId);
+            var chassis = AllChassis.First(x => x.Id == vehicleOrder.ChassisId);
+            var optionPack = OptionPacks.First(x => x.Id == vehicleOrder.OptionPackId);
+
+            return engine.Price + chassis.Price + optionPack.Price;
         }
     }
 }

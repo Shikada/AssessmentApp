@@ -31,7 +31,7 @@ builder.Services.AddMassTransit(x =>
 
 builder.Services.AddScoped<CreateVehicleOrder>();
 builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
-builder.Services.AddScoped<OrderPreassembledVehicle>();
+builder.Services.AddScoped<ReservePreassembledVehicleForPayment>();
 builder.Services.AddScoped<IVehicleOrderRepository, VehicleOrderRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 
