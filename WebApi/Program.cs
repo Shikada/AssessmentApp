@@ -48,6 +48,9 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<QueueEngineForManufacture>();
 builder.Services.AddScoped<QueueChassisForManufacture>();
 builder.Services.AddScoped<QueueOptionPackForManufacture>();
+builder.Services.AddScoped<CompleteEngineManufacture>();
+builder.Services.AddScoped<CompleteChassisManufacture>();
+builder.Services.AddScoped<CompleteOptionPackManufacture>();
 builder.Services.AddScoped<IManufactureItemRepo, ManufactureItemRepo>();
 
 builder.Services.AddControllers();

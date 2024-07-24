@@ -19,5 +19,20 @@ namespace Manufacturer.Infrastructure.Db.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public Task<EngineManufactureItem> GetEngineItem(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ChassisManufactureItem> GetChassisItem(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<OptionPackManufactureItem> GetOptionPackItem(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
