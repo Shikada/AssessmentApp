@@ -9,15 +9,18 @@ namespace Customer.Application.UseCases
         private readonly ILogger<OrderVehicle> logger;
         private readonly IVehicleOrderRepository vehicleOrderRepository;
         private readonly IWarehouseRepository warehouseRepository;
+        private readonly IPaymentService paymentService;
 
         public OrderVehicle(
             ILogger<OrderVehicle> logger,
             IVehicleOrderRepository vehicleOrderRepository,
-            IWarehouseRepository warehouseRepository)
+            IWarehouseRepository warehouseRepository,
+            IPaymentService paymentService)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.vehicleOrderRepository = vehicleOrderRepository ?? throw new ArgumentNullException(nameof(vehicleOrderRepository));
             this.warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
+            this.paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
         }
 
         public async Task<bool> Execute(Guid invoiceId)
@@ -38,7 +41,11 @@ namespace Customer.Application.UseCases
             }
 
             vehicleOrder.Accept();
+            await paymentService.ProcessPayedInvoice(vehicleOrder.Invoice!); // safe to ignore null check here
             var isSuccessful = warehouse.AcceptOrder(vehicleOrder);
+
+            await vehicleOrderRepository.Save(vehicleOrder);
+            await warehouseRepository.Save(warehouse);
 
             return isSuccessful;
         }

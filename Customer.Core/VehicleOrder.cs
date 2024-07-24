@@ -45,7 +45,13 @@
 
         public void Accept()
         {
+            if (Status != VehicleOrderStatus.AwaitingPayment || Invoice is null)
+            {
+                throw new InvalidOperationException("Tried to accept a vehicle order that was not awaiting payment.");
+            }
+
             Status = VehicleOrderStatus.Accepted;
+            Invoice.Pay();
         }
     }
 }
