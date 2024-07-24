@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Customer.Messages\Customer.Messages.csproj" />
+    <ProjectReference Include="..\Manufacturer.Core\Manufacturer.Core.csproj" />
+    <ProjectReference Include="..\Manufacturer.Messages\Manufacturer.Messages.csproj" />
   </ItemGroup>
 
 </Project>

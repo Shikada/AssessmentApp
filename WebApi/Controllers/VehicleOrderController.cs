@@ -15,13 +15,15 @@ namespace WebApi.Controllers
         private readonly GetMatchingPreassemlbedVehiclesForOrder getMatchingPreassemlbedVehiclesForOrder;
         private readonly ReservePreassembledVehicleForPayment reservePreassembledVehicle;
         private readonly OrderVehicle orderVehicle;
+        private readonly ReservePartsForVehicleOrder reservePartsForVehicleOrder;
 
         public VehicleOrderController(
             ILogger<VehicleOrderController> logger,
             CreateVehicleOrder createVehicleOrderUseCase,
             GetMatchingPreassemlbedVehiclesForOrder getMatchingPreassemlbedVehiclesForOrder,
             ReservePreassembledVehicleForPayment orderPreassembledVehicle,
-            OrderVehicle orderVehicle)
+            OrderVehicle orderVehicle,
+            ReservePartsForVehicleOrder reservePartsForVehicleOrder)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.createVehicleOrderUseCase = createVehicleOrderUseCase ?? throw new ArgumentNullException(nameof(createVehicleOrderUseCase));
@@ -29,6 +31,7 @@ namespace WebApi.Controllers
                 ?? throw new ArgumentNullException(nameof(getMatchingPreassemlbedVehiclesForOrder));
             this.reservePreassembledVehicle = orderPreassembledVehicle ?? throw new ArgumentNullException(nameof(orderPreassembledVehicle));
             this.orderVehicle = orderVehicle ?? throw new ArgumentNullException(nameof(orderVehicle));
+            this.reservePartsForVehicleOrder = reservePartsForVehicleOrder ?? throw new ArgumentNullException(nameof(reservePartsForVehicleOrder));
         }
 
         [HttpPost]
@@ -81,6 +84,16 @@ namespace WebApi.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
+
+            return Ok();
+        }
+
+        [HttpPost("reserve-parts")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ReservePartsInVehicleOrder([FromQuery] Guid vehicleOrderId)
+        {
+            await reservePartsForVehicleOrder.Execute(vehicleOrderId);
 
             return Ok();
         }

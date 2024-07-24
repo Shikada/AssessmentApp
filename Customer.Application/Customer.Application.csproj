@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Customer.Core\Customer.Core.csproj" />
     <ProjectReference Include="..\Customer.Messages\Customer.Messages.csproj" />
+    <ProjectReference Include="..\Manufacturer.Messages\Manufacturer.Messages.csproj" />
   </ItemGroup>
 
 </Project>

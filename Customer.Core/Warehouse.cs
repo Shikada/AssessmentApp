@@ -42,6 +42,25 @@
 
         }
 
+        public UnavailableVehicleOrderParts ReserveParts(VehicleOrder vehicleOrder)
+        {
+            //TODO: add error handling here for all First() calls
+            var engine = Engines.First(x => x.Id == vehicleOrder.EngineId);
+            var chassis = AllChassis.First(x => x.Id == vehicleOrder.ChassisId);
+            var optionPack = OptionPacks.First(x => x.Id == vehicleOrder.OptionPackId);
+
+            var isEngineAvailable = engine.Reserve();
+            var isChassisAvailable = chassis.Reserve();
+            var isOptionPackAvailable = optionPack.Reserve();
+
+            return new UnavailableVehicleOrderParts
+            {
+                EngineId = isEngineAvailable ? null : engine.Id,
+                ChassisId = isChassisAvailable? null : chassis.Id,
+                OptionPackId = isOptionPackAvailable ? null : optionPack.Id,
+            };
+        }
+
         public bool AcceptOrder(VehicleOrder vehicleOrder)
         {
             if (vehicleOrder.PreassembledVehicleId is not null)
@@ -55,6 +74,7 @@
             }
             else
             {
+                //TODO: add error handling here for all First() calls
                 var engine = Engines.First(x => x.Id == vehicleOrder.EngineId);
                 var chassis = AllChassis.First(x => x.Id == vehicleOrder.ChassisId);
                 var optionPack = OptionPacks.First(x => x.Id == vehicleOrder.OptionPackId);

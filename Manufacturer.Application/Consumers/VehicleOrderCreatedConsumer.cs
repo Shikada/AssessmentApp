@@ -2,7 +2,7 @@
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace Manufacturer.Application
+namespace Manufacturer.Application.Consumers
 {
     public class VehicleOrderCreatedConsumer : IConsumer<VehicleOrderCreated>
     {
@@ -17,6 +17,9 @@ namespace Manufacturer.Application
         {
             logger.LogInformation("Consuming message {messageName} with ID {vehicleOrderId}, for customer {customerId}",
                 nameof(VehicleOrderCreated), context.Message.VehicleOrderId, context.Message.CustomerId);
+
+            // Some logic could go here, probably some analytics that Manufacturer wants to capture for Vehicle Orders
+            // This happens before any parts that are out of stock in the Customer Warehouse are actually ordered for production
 
             return Task.CompletedTask;
         }

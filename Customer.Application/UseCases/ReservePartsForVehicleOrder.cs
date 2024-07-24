@@ -1,29 +1,35 @@
 ﻿using Customer.Application.Ports;
 using Customer.Core;
+using Customer.Messages.Commands;
+using Manufacturer.Messages.Commands;
+using MassTransit;
 using Microsoft.Extensions.Logging;
 
 namespace Customer.Application.UseCases
 {
-    public class ReservePreassembledVehicleForPayment
+    public class ReservePartsForVehicleOrder
     {
         private readonly ILogger<GetMatchingPreassemlbedVehiclesForOrder> logger;
         private readonly IVehicleOrderRepository vehicleOrderRepository;
         private readonly IWarehouseRepository warehouseRepository;
         private readonly IPaymentService paymentService;
+        private readonly IPublishEndpoint publishEndpoint;
 
-        public ReservePreassembledVehicleForPayment(
+        public ReservePartsForVehicleOrder(
             ILogger<GetMatchingPreassemlbedVehiclesForOrder> logger,
             IVehicleOrderRepository vehicleOrderRepository,
             IWarehouseRepository warehouseRepository,
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            IPublishEndpoint publishEndpoint)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.vehicleOrderRepository = vehicleOrderRepository ?? throw new ArgumentNullException(nameof(vehicleOrderRepository));
             this.warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
             this.paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
+            this.publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
         }
 
-        public async Task<Invoice?> Execute(Guid vehicleOrderId, Guid preassembledVehicleId)
+        public async Task Execute(Guid vehicleOrderId)
         {
             var vehicleOrder = await vehicleOrderRepository.GetVehicleOrder(vehicleOrderId);
             var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
@@ -48,20 +54,41 @@ namespace Customer.Application.UseCases
                 throw new Exception($"Payment service failed to create an invoice for vehicle order with ID {vehicleOrderId}");
             }
 
-            vehicleOrder.AssociatePreassembledVehicle(preassembledVehicleId);
             vehicleOrder.AwaitPayment(invoice);
-            var successfullyReserved = warehouse.ReservePreassembledVehicle(preassembledVehicleId);
+            var unavailableParts = warehouse.ReserveParts(vehicleOrder);
 
-            if (!successfullyReserved)
+            if (unavailableParts.EngineId is not null)
             {
-                logger.LogInformation("Failed to reserve preassembled vehicle with ID {preassembledVehicleId}", preassembledVehicleId);
-                return null;
+                vehicleOrder.AddPartAwaitingManufacture(unavailableParts.EngineId.Value);
+                await publishEndpoint.Publish(new ManufactureEngine
+                {
+                    VehicleOrderId = vehicleOrderId,
+                    EngineId = unavailableParts.EngineId.Value
+                });
             }
-            
+
+            if (unavailableParts.ChassisId is not null)
+            {
+                vehicleOrder.AddPartAwaitingManufacture(unavailableParts.ChassisId.Value);
+                await publishEndpoint.Publish(new ManufactureChassis
+                {
+                    VehicleOrderId = vehicleOrderId,
+                    ChassisId = unavailableParts.ChassisId.Value
+                });
+            }
+
+            if (unavailableParts.OptionPackId is not null)
+            {
+                vehicleOrder.AddPartAwaitingManufacture(unavailableParts.OptionPackId.Value);
+                await publishEndpoint.Publish(new ManufactureOptionPack
+                {
+                    VehicleOrderId = vehicleOrderId,
+                    OptionPackId = unavailableParts.OptionPackId.Value
+                });
+            }
+
             await vehicleOrderRepository.Save(vehicleOrder);
             await warehouseRepository.Save(warehouse);
-
-            return invoice;
         }
     }
 }

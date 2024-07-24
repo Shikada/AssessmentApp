@@ -2,10 +2,13 @@ using Serilog.Events;
 using Serilog;
 using MassTransit;
 using Customer.Application.UseCases;
-using Manufacturer.Application;
 using Customer.Application.Ports;
 using Customer.Infrastructure.Db.Repositories;
 using Customer.Infrastructure.Services;
+using Manufacturer.Application.Consumers;
+using Manufacturer.Application.UseCases;
+using Manufacturer.Application.Ports;
+using Manufacturer.Infrastructure.Db.Repositories;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
@@ -23,6 +26,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMassTransit(x =>
 {
     x.AddConsumer<VehicleOrderCreatedConsumer>();
+    x.AddConsumer<ManufactureEngineConsumer>();
+    x.AddConsumer<ManufactureChassisConsumer>();
+    x.AddConsumer<ManufactureOptionPackConsumer>();
 
     x.UsingInMemory((context, cfg) =>
     {
@@ -34,9 +40,15 @@ builder.Services.AddScoped<CreateVehicleOrder>();
 builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
 builder.Services.AddScoped<ReservePreassembledVehicleForPayment>();
 builder.Services.AddScoped<OrderVehicle>();
+builder.Services.AddScoped<ReservePartsForVehicleOrder>();
 builder.Services.AddScoped<IVehicleOrderRepository, VehicleOrderRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+builder.Services.AddScoped<QueueEngineForManufacture>();
+builder.Services.AddScoped<QueueChassisForManufacture>();
+builder.Services.AddScoped<QueueOptionPackForManufacture>();
+builder.Services.AddScoped<IManufactureItemRepo, ManufactureItemRepo>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
