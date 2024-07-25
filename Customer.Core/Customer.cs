@@ -1,7 +1,10 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     public class Customer
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }

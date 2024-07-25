@@ -23,7 +23,7 @@ namespace Customer.Application.UseCases
         public async Task<List<PreassembledVehicle>> ExecuteAsync(Guid vehicleOrderId)
         {
             var vehicleOrder = await vehicleOrderRepository.GetById(vehicleOrderId);
-            var warehouse = await warehouseRepository.GetWarehouse(Guid.NewGuid());
+            var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
 
             if (vehicleOrder is null)
             {

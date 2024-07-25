@@ -10,16 +10,16 @@ namespace Customer.Application.UseCases
     {
         private readonly ILogger<CreateVehicleOrder> logger;
         private readonly IPublishEndpoint publishEndpoint;
-        private readonly IWarehouseRepository warehouseRepository;
+        private readonly IVehicleOrderRepository vehicleOrderRepository;
 
         public CreateVehicleOrder(
             ILogger<CreateVehicleOrder> logger,
             IPublishEndpoint publishEndpoint,
-            IWarehouseRepository warehouseRepository)
+            IVehicleOrderRepository vehicleOrderRepository)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.publishEndpoint = publishEndpoint ?? throw new ArgumentNullException(nameof(publishEndpoint));
-            this.warehouseRepository = warehouseRepository ?? throw new ArgumentNullException(nameof(warehouseRepository));
+            this.vehicleOrderRepository = vehicleOrderRepository ?? throw new ArgumentNullException(nameof(vehicleOrderRepository));
         }
 
         public async Task ExecuteAsync(Messages.Commands.CreateVehicleOrder command)
@@ -36,7 +36,7 @@ namespace Customer.Application.UseCases
                 CustomerId = command.CustomerId
             });
 
-            var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
+            await vehicleOrderRepository.Save(newVehicleOrder);
         }
     }
 }

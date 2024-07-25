@@ -1,7 +1,10 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     public class Invoice
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public Guid VehicleOrderId { get; private set; }
         public Guid CustomerId { get; private set; }

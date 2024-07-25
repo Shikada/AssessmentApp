@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 namespace Customer.Core
 {
     public class PreassembledVehicle
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public Guid EngineId { get; private set; }
         public Guid ChassisId { get; private set; }

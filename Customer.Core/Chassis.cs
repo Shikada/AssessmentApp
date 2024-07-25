@@ -1,7 +1,10 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     public class Chassis
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public string Model { get; private set; }
         public string Type { get; private set; }

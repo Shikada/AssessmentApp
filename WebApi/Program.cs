@@ -63,7 +63,7 @@ builder.Services.AddScoped<CompleteOptionPackManufacture>();
 builder.Services.AddScoped<IManufactureItemRepo, ManufactureItemRepo>();
 
 builder.Services.AddDbContext<CustomerDbContext>(
-    opt => opt.UseSqlite("customer.db"));
+    opt => opt.UseSqlite("Data Source=Database/customer.db"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

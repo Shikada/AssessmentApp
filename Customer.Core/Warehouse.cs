@@ -1,11 +1,14 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     /// <summary>
     /// Aggregate root for the entire warehouse inventory.
     /// </summary>
     public class Warehouse
     {
-        public static readonly Guid MainWarehouseId = Guid.NewGuid();
+        public static readonly Guid MainWarehouseId = Guid.Parse("01E90769-9E6E-48E0-BB36-C4C9DC24E845");
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public List<Engine> Engines { get; private set; }
         public List<Chassis> AllChassis { get; private set; }

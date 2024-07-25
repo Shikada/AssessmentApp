@@ -1,10 +1,13 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     /// <summary>
     /// Represents all the details of a vehicle order by a customer. Serves as aggregate root for invoices.
     /// </summary>
     public class VehicleOrder
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public VehicleOrderStatus Status { get; private set; }
         public Guid CustomerId { get; private set; }

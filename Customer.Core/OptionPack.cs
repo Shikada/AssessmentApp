@@ -1,7 +1,10 @@
-﻿namespace Customer.Core
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Customer.Core
 {
     public class OptionPack
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; private set; }
         public string Name { get; private set; }
         public int AvailableQuantity { get; private set; }
