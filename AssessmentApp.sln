@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manufacturer.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customer.Messages", "Customer.Messages\Customer.Messages.csproj", "{4DF7EE2E-3A6F-4EFC-9E27-8079640B5ADD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manufacturer.Messages", "Manufacturer.Messages\Manufacturer.Messages.csproj", "{2AD80306-2581-4295-B0F6-FE9433A279C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Manufacturer.Messages", "Manufacturer.Messages\Manufacturer.Messages.csproj", "{2AD80306-2581-4295-B0F6-FE9433A279C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

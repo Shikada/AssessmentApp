@@ -39,5 +39,14 @@ namespace Customer.Infrastructure.Services
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Method with empty implementation, just for ilustrative purposes.
+        /// </summary>
+        /// <param name="invoice"></param>
+        public Task ProcessInvoiceCancelled(Invoice invoice)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

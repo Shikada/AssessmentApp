@@ -6,5 +6,6 @@ namespace Customer.Application.Ports
     {
         Task<Invoice?> CreateNewInvoice(VehicleOrder vehicleOrder);
         Task ProcessPayedInvoice(Invoice invoice);
+        Task ProcessInvoiceCancelled(Invoice invoice);
     }
 }

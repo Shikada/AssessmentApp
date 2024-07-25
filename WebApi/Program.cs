@@ -9,6 +9,9 @@ using Manufacturer.Application.Consumers;
 using Manufacturer.Application.UseCases;
 using Manufacturer.Application.Ports;
 using Manufacturer.Infrastructure.Db.Repositories;
+using Customer.Application.Consumers;
+using Customer.Infrastructure.Db;
+using Microsoft.EntityFrameworkCore;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
@@ -25,6 +28,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<EngineManufacturedConsumer>();
+    x.AddConsumer<ChassisManufacturedConsumer>();
+    x.AddConsumer<OptionPackManufacturedConsumer>();
+
     x.AddConsumer<VehicleOrderCreatedConsumer>();
     x.AddConsumer<ManufactureEngineConsumer>();
     x.AddConsumer<ManufactureChassisConsumer>();
@@ -41,6 +48,8 @@ builder.Services.AddScoped<GetMatchingPreassemlbedVehiclesForOrder>();
 builder.Services.AddScoped<ReservePreassembledVehicleForPayment>();
 builder.Services.AddScoped<OrderVehicle>();
 builder.Services.AddScoped<ReservePartsForVehicleOrder>();
+builder.Services.AddScoped<AssociateManufacturedPartWithVehileOrder>();
+builder.Services.AddScoped<CancelVehicleOrder>();
 builder.Services.AddScoped<IVehicleOrderRepository, VehicleOrderRepository>();
 builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
@@ -52,6 +61,9 @@ builder.Services.AddScoped<CompleteEngineManufacture>();
 builder.Services.AddScoped<CompleteChassisManufacture>();
 builder.Services.AddScoped<CompleteOptionPackManufacture>();
 builder.Services.AddScoped<IManufactureItemRepo, ManufactureItemRepo>();
+
+builder.Services.AddDbContext<CustomerDbContext>(
+    opt => opt.UseSqlite("customer.db"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

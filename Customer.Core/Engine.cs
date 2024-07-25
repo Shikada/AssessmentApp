@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Customer.Core
+﻿namespace Customer.Core
 {
     public class Engine
     {

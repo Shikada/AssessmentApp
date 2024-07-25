@@ -6,6 +6,7 @@
     public class Warehouse
     {
         public static readonly Guid MainWarehouseId = Guid.NewGuid();
+        public Guid Id { get; private set; }
         public List<Engine> Engines { get; private set; }
         public List<Chassis> AllChassis { get; private set; }
         public List<OptionPack> OptionPacks { get; private set; }
@@ -16,16 +17,29 @@
         public Warehouse() { }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+        public Warehouse(
+            List<Engine> engines,
+            List<Chassis> allChassis,
+            List<OptionPack> optionPacks,
+            List<PreassembledVehicle> preassembledVehicles)
+        {
+            Id = MainWarehouseId;
+            Engines = engines ?? throw new ArgumentNullException(nameof(engines));
+            AllChassis = allChassis ?? throw new ArgumentNullException(nameof(allChassis));
+            OptionPacks = optionPacks ?? throw new ArgumentNullException(nameof(optionPacks));
+            PreassembledVehicles = preassembledVehicles ?? throw new ArgumentNullException(nameof(preassembledVehicles));
+        }
+
         public List<PreassembledVehicle> FindMatchingPreassemlbedVehicles(
-            Guid engine,
-            Guid chassis,
-            Guid optionPack)
+            Guid engineId,
+            Guid chassisId,
+            Guid optionPackId)
         {
             return PreassembledVehicles
                 .Where(vehicle =>
-                    vehicle.Engine.Id == engine
-                    && vehicle.Chassis.Id == chassis
-                    && vehicle.OptionPack.Id == optionPack)
+                    vehicle.EngineId == engineId
+                    && vehicle.ChassisId == chassisId
+                    && vehicle.OptionPackId == optionPackId)
                 .ToList();
         }
 

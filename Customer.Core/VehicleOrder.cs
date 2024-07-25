@@ -60,13 +60,35 @@
                 throw new InvalidOperationException("Tried to accept a vehicle order that was not awaiting payment.");
             }
 
-            Status = VehicleOrderStatus.Accepted;
+            if (PartsAwaitingManufacture.Any())
+                Status = VehicleOrderStatus.WaitingForParts;
+            else
+                Status = VehicleOrderStatus.Accepted;
+
             Invoice.Pay();
         }
 
         public void AddPartAwaitingManufacture(Guid partId)
         {
             PartsAwaitingManufacture.Add(partId);
+        }
+
+        public void StopWaitingForPart(Guid partId)
+        {
+            PartsAwaitingManufacture.Remove(partId);
+
+            if (!PartsAwaitingManufacture.Any())
+                Status = VehicleOrderStatus.AllPartsReady;
+        }
+
+        public void Fullfil()
+        {
+            Status = VehicleOrderStatus.Fulfilled;
+        }
+
+        public void Cancel()
+        {
+            Status = VehicleOrderStatus.Cancelled;
         }
     }
 }

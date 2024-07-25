@@ -5,6 +5,8 @@
         Initial = 0,
         AwaitingPayment,
         Accepted,
+        WaitingForParts,
+        AllPartsReady,
         Fulfilled,
         Cancelled
     }

@@ -25,7 +25,7 @@ namespace Customer.Application.UseCases
 
         public async Task<bool> Execute(Guid invoiceId)
         {
-            var vehicleOrder = await vehicleOrderRepository.GetVehicleOrderByInvoiceId(invoiceId);
+            var vehicleOrder = await vehicleOrderRepository.GetByInvoiceId(invoiceId);
             var warehouse = await warehouseRepository.GetWarehouse(Warehouse.MainWarehouseId);
 
             if (vehicleOrder is null)
