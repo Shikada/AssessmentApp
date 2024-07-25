@@ -58,7 +58,7 @@ namespace Customer.Core
 
         public void Accept()
         {
-            if (Status != VehicleOrderStatus.AwaitingPayment || Invoice is null)
+            if ((Status != VehicleOrderStatus.AwaitingPayment && Status != VehicleOrderStatus.AllPartsReady) || Invoice is null)
             {
                 throw new InvalidOperationException("Tried to accept a vehicle order that was not awaiting payment.");
             }

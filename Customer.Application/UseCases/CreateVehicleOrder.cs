@@ -22,7 +22,7 @@ namespace Customer.Application.UseCases
             this.vehicleOrderRepository = vehicleOrderRepository ?? throw new ArgumentNullException(nameof(vehicleOrderRepository));
         }
 
-        public async Task ExecuteAsync(Messages.Commands.CreateVehicleOrder command)
+        public async Task<VehicleOrder> ExecuteAsync(Messages.Commands.CreateVehicleOrder command)
         {
             var newVehicleOrder = new VehicleOrder(
                 command.CustomerId,
@@ -37,6 +37,8 @@ namespace Customer.Application.UseCases
             });
 
             await vehicleOrderRepository.Save(newVehicleOrder);
+
+            return newVehicleOrder;
         }
     }
 }

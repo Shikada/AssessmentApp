@@ -12,6 +12,7 @@ using Manufacturer.Infrastructure.Db.Repositories;
 using Customer.Application.Consumers;
 using Customer.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
+using Manufacturer.Infrastructure.Db;
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
@@ -62,8 +63,8 @@ builder.Services.AddScoped<CompleteChassisManufacture>();
 builder.Services.AddScoped<CompleteOptionPackManufacture>();
 builder.Services.AddScoped<IManufactureItemRepo, ManufactureItemRepo>();
 
-builder.Services.AddDbContext<CustomerDbContext>(
-    opt => opt.UseSqlite("Data Source=Database/customer.db"));
+builder.Services.AddDbContext<CustomerDbContext>(opt => opt.UseSqlite("Data Source=Database/customer.db"));
+builder.Services.AddDbContext<ManufacturerDbContext>(opt => opt.UseSqlite("Data Source=Database/manufacturer.db"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

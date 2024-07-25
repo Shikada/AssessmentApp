@@ -28,11 +28,6 @@ namespace Customer.Application.UseCases
 
             vehicleOrder.StopWaitingForPart(partId);
 
-            if (vehicleOrder.Status == Core.VehicleOrderStatus.AllPartsReady)
-            {
-                vehicleOrder.Fullfil();
-            }
-
             await vehicleOrderRepository.Save(vehicleOrder);
         }
     }

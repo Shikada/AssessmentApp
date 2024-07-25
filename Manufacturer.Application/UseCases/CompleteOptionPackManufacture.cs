@@ -23,11 +23,15 @@ namespace Manufacturer.Application.UseCases
         public async Task Execute(Guid optionPackManufactureItemId)
         {
             var manufactureItem = await manufactureItemRepo.GetOptionPackItem(optionPackManufactureItemId);
+            manufactureItem!.CompleteManufacture();
+
             await publishEndpoint.Publish(new OptionPackManufactured
             {
                 VehicleOrderId = manufactureItem.VehicleOrderId,
                 OptionPackId = manufactureItem.OptionPackId
             });
+
+            await manufactureItemRepo.Save(manufactureItem);
         }
 
     }

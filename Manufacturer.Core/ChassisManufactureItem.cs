@@ -14,5 +14,10 @@
             VehicleOrderId = vehicleOrderId;
             Status = ManufactureItemStatus.Queued;
         }
+
+        public void CompleteManufacture()
+        {
+            Status = ManufactureItemStatus.ProductionDone;
+        }
     }
 }

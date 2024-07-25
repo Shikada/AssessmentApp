@@ -5,34 +5,80 @@ namespace Manufacturer.Infrastructure.Db.Repositories
 {
     public class ManufactureItemRepo : IManufactureItemRepo
     {
-        public Task AddEngine(EngineManufactureItem engineManufactureItem)
+        private readonly ManufacturerDbContext manufacturerDbContext;
+
+        public ManufactureItemRepo(ManufacturerDbContext manufacturerDbContext)
         {
-            throw new NotImplementedException();
+            this.manufacturerDbContext = manufacturerDbContext;
         }
 
-        public Task AddChassis(ChassisManufactureItem chassisManufactureItem)
+        public async Task AddEngine(EngineManufactureItem engineManufactureItem)
         {
-            throw new NotImplementedException();
+            manufacturerDbContext.EngineManufactureItems.Add(engineManufactureItem);
+            await manufacturerDbContext.SaveChangesAsync();
         }
 
-        public Task AddOptionsPack(OptionPackManufactureItem optionPackManufactureItem)
+        public async Task AddChassis(ChassisManufactureItem chassisManufactureItem)
         {
-            throw new NotImplementedException();
+            manufacturerDbContext.ChassisManufactureItems.Add(chassisManufactureItem);
+            await manufacturerDbContext.SaveChangesAsync();
         }
 
-        public Task<EngineManufactureItem> GetEngineItem(Guid id)
+        public async Task AddOptionsPack(OptionPackManufactureItem optionPackManufactureItem)
         {
-            throw new NotImplementedException();
+            manufacturerDbContext.OptionPackManufactureItems.Add(optionPackManufactureItem);
+            await manufacturerDbContext.SaveChangesAsync();
         }
 
-        public Task<ChassisManufactureItem> GetChassisItem(Guid id)
+        public async Task<EngineManufactureItem?> Save(EngineManufactureItem manufactureItem)
         {
-            throw new NotImplementedException();
+            var persistedManufatureItem = await manufacturerDbContext.EngineManufactureItems.FindAsync(manufactureItem.Id);
+
+            if (persistedManufatureItem is null)
+                manufacturerDbContext.EngineManufactureItems.Add(manufactureItem);
+
+            await manufacturerDbContext.SaveChangesAsync();
+
+            return await manufacturerDbContext.EngineManufactureItems.FindAsync(manufactureItem.Id);
         }
 
-        public Task<OptionPackManufactureItem> GetOptionPackItem(Guid id)
+        public async Task<ChassisManufactureItem?> Save(ChassisManufactureItem manufactureItem)
         {
-            throw new NotImplementedException();
+            var persistedManufatureItem = await manufacturerDbContext.ChassisManufactureItems.FindAsync(manufactureItem.Id);
+
+            if (persistedManufatureItem is null)
+                manufacturerDbContext.ChassisManufactureItems.Add(manufactureItem);
+
+            await manufacturerDbContext.SaveChangesAsync();
+
+            return await manufacturerDbContext.ChassisManufactureItems.FindAsync(manufactureItem.Id);
+        }
+
+        public async Task<OptionPackManufactureItem?> Save(OptionPackManufactureItem manufactureItem)
+        {
+            var persistedManufatureItem = await manufacturerDbContext.OptionPackManufactureItems.FindAsync(manufactureItem.Id);
+
+            if (persistedManufatureItem is null)
+                manufacturerDbContext.OptionPackManufactureItems.Add(manufactureItem);
+
+            await manufacturerDbContext.SaveChangesAsync();
+
+            return await manufacturerDbContext.OptionPackManufactureItems.FindAsync(manufactureItem.Id);
+        }
+
+        public async Task<EngineManufactureItem?> GetEngineItem(Guid id)
+        {
+            return await manufacturerDbContext.EngineManufactureItems.FindAsync(id);
+        }
+
+        public async Task<ChassisManufactureItem?> GetChassisItem(Guid id)
+        {
+            return await manufacturerDbContext.ChassisManufactureItems.FindAsync(id);
+        }
+
+        public async Task<OptionPackManufactureItem?> GetOptionPackItem(Guid id)
+        {
+            return await manufacturerDbContext.OptionPackManufactureItems.FindAsync(id);
         }
     }
 }

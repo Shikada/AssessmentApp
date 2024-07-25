@@ -24,11 +24,15 @@ namespace Manufacturer.Application.UseCases
         public async Task Execute(Guid chassisManufactureItemId)
         {
             var manufactureItem = await manufactureItemRepo.GetChassisItem(chassisManufactureItemId);
+            manufactureItem!.CompleteManufacture();
+
             await publishEndpoint.Publish(new ChassisManufactured
             {
                 VehicleOrderId = manufactureItem.VehicleOrderId,
                 ChassisId = manufactureItem.ChassisId
             });
+
+            await manufactureItemRepo.Save(manufactureItem);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         {
             logger.LogInformation("Creating a vehicle order for {customerId}", request.CustomerId);
 
-            await createVehicleOrderUseCase.ExecuteAsync(new Customer.Messages.Commands.CreateVehicleOrder
+            var newVehicleOrder = await createVehicleOrderUseCase.ExecuteAsync(new Customer.Messages.Commands.CreateVehicleOrder
             {
                 CustomerId = request.CustomerId,
                 EngineId = request.EngineId,
@@ -69,7 +69,7 @@ namespace WebApi.Controllers
                 OptionPackId = request.OptionPackId
             });
 
-            return Ok();
+            return Ok(new VehicleOrderDto(newVehicleOrder));
         }
 
         [HttpGet("matching-preassembled")]
@@ -95,17 +95,17 @@ namespace WebApi.Controllers
         {
             try
             {
-                var isSuccessful = await reservePreassembledVehicle.Execute(vehicleOrderId, vehicleId);
+                var invoice = await reservePreassembledVehicle.Execute(vehicleOrderId, vehicleId);
 
-                if (isSuccessful is null)
+                if (invoice is null)
                     return StatusCode(StatusCodes.Status400BadRequest, $"Tried to reserve pressembled vehicle with ID '{vehicleId}' that is unavailable");
+
+                return Ok(new InvoiceDto(invoice));
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
-            }
-
-            return Ok();
+            }   
         }
 
         [HttpPost("reserve-parts")]
